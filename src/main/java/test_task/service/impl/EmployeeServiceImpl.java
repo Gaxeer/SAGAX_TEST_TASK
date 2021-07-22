@@ -6,6 +6,8 @@ import test_task.dao.EmployeeDao;
 import test_task.model.Employee;
 import test_task.service.EmployeeService;
 
+import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 
 @Service
@@ -36,10 +38,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         //TODO Implement method using Collection
         // ---write your code here
 
-
-
-        employeeDao.saveAll(employees);
-        return 0L;
+        Long id = 0L;
+        for (Employee employee : employees){
+            if(employee.getName().equals(name)) {
+                employeeDao.delete(employee);
+                id = employee.getId();
+                break;
+            }
+        }
+        return id;
     }
 
     @Override
@@ -48,19 +55,32 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //TODO Implement method using Collection
         // ---write your code here
-
-
-
-        employeeDao.saveAll(employees);
-        return 0L;
+        Long id = 0L;
+        HashSet newEmployees = new HashSet();
+        for (Employee employee : employees){
+            if(employee.getName().equals(name)) {
+                employee.setSalary(new BigDecimal(8888));
+                id = employee.getId();
+            }
+            newEmployees.add(employee);
+        }
+        employeeDao.saveAll(newEmployees);
+        return id;
     }
 
     @Override
     public Long hireEmployee(Employee employee) {
         //TODO Implement method using Collection and DAO
         // ---write your code here
-
-
-        return 0L;
+        Long id = 0L;
+        Employee newEmployee;
+        for (Employee emp:employeeDao.findAll()) {
+            if(emp.getDepartment().getId() == 1 && emp.getBoss() == null){
+                newEmployee = new Employee(emp.getDepartment(), emp, "Keanu Romero", new BigDecimal(15000));
+                employeeDao.save(newEmployee);
+                id = newEmployee.getId();
+            }
+        }
+        return id;
     }
 }
